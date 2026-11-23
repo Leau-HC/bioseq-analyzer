@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Mon espace · Énergie Congo{% endblock %}
+{% block content %}
+<div class="dashboard-head">
+  <div>
+    <div class="eyebrow"><span class="live-dot"></span> ESPACE CLIENT · DÉMO</div>
+    <h1>Bonjour, {{ customer["full_name"].split(" ")[0] }} <span class="wave">✳</span></h1>
+    <p class="muted">Voici le résumé de votre espace énergie.</p>
+  </div>
+  <div class="avatar">{{ customer["full_name"][0] }}</div>
+</div>
+
+<div class="demo-banner"><span>ⓘ</span><div><strong>Environnement de démonstration</strong><br>Ces informations sont fictives. Les opérations affichées ne règlent aucune facture réelle.</div></div>
+
+<section class="summary-grid">
+  <article class="card bill-card">
+    <div class="card-topline"><span class="card-kicker">FACTURE EN COURS</span><span class="status status-open">● À régler</span></div>
+    {% if meters and meters[0]["invoice_id"] %}
+      <div class="amount">{{ "{:,.0f}".format(meters[0]["amount_cfa"]).replace(",", " ") }} <small>FCFA</small></div>
+      <p class="bill-period">{{ meters[0]["billing_period"] }} <span>·</span> {{ meters[0]["invoice_number"] }}</p>
+      <div class="bill-meta"><span>Échéance</span><strong>{{ meters[0]["due_date"] }}</strong></div>
+      <a class="button button-dark" href="{{ url_for('payment', invoice_id=meters[0]['invoice_id']) }}">Voir et simuler le paiement <span>→</span></a>
+    {% else %}
+      <p class="muted">Aucune facture disponible.</p>
+    {% endif %}
+  </article>
+
+  <article class="card consumption-card">
+    <div class="card-topline"><span class="card-kicker">CONSOMMATION</span><span class="trend">↗ 7 %</span></div>
+    {% if readings %}
+      <div class="amount">{{ readings[0]["consumption_kwh"] }} <small>kWh</small></div>
+      <p class="bill-period">Relevé de {{ readings[0]["billing_period"] }}</p>
+      <div class="meter-track"><span style="width: 68%"></span></div>
+      <p class="comparison">par rapport à {{ readings[1]["billing_period"] if readings|length > 1 else "la période précédente" }}</p>
+    {% else %}
+      <p class="muted">Aucun relevé de consommation disponible.</p>
+    {% endif %}
+  </article>
+</section>
+
+<section class="content-grid">
+  <article class="card">
+    <div class="section-heading"><div><div class="card-kicker">VOTRE CONTRAT</div><h2>Compteur & adresse</h2></div><span class="section-icon">⌂</span></div>
+    {% for meter in meters %}
+      <div class="contract-row"><span class="label-muted">Référence compteur</span><strong>{{ meter["reference"] }}</strong></div>
+      <div class="contract-row"><span class="label-muted">Adresse de la parcelle</span><strong>{{ meter["address"] }}</strong></div>
+      <div class="contract-row"><span class="label-muted">Quartier</span><strong>{{ customer["district"] }}</strong></div>
+      <div class="contract-row"><span class="label-muted">Téléphone enregistré</span><strong>{{ customer["phone"] }}</strong></div>
+    {% else %}
+      <p class="muted">Aucun compteur associé à ce compte de démonstration.</p>
+    {% endfor %}
+  </article>
+
+  <article class="card history-card">
+    <div class="section-heading"><div><div class="card-kicker">ACTIVITÉ</div><h2>Historique des paiements</h2></div><span class="section-icon">↗</span></div>
+    {% if payments %}
+      {% for payment in payments %}
+        <div class="payment-row">
+          <span class="payment-method-icon">↗</span>
+          <div class="payment-details"><strong>{{ payment["method"] }}</strong><small>{{ payment["reference"] }}</small></div>
+          <div class="payment-amount"><strong>{{ "{:,.0f}".format(payment["amount_cfa"]).replace(",", " ") }} F</strong><small>{{ payment["status"] }}</small></div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><span>↗</span><p>Aucune opération pour le moment.</p></div>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Connexion · Énergie Congo{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-intro">
+    <div class="eyebrow"><span class="live-dot"></span> VOTRE ÉNERGIE, EN UN SEUL ESPACE</div>
+    <h1>Le suivi de votre électricité devient <em>plus simple.</em></h1>
+    <p>Retrouvez votre consommation, vos factures et vos opérations dans un espace client pensé pour vous.</p>
+    <div class="intro-points">
+      <span><i>01</i> Consultez vos relevés</span>
+      <span><i>02</i> Suivez vos factures</span>
+      <span><i>03</i> Simulez un paiement</span>
+    </div>
+    <div class="intro-orbit orbit-one"></div>
+    <div class="intro-orbit orbit-two"></div>
+    <div class="intro-spark">✳</div>
+  </div>
+
+  <section class="card auth-card">
+    <div class="card-kicker">ESPACE CLIENT</div>
+    <h2>Bienvenue</h2>
+    <p class="muted">Connectez-vous avec votre identifiant de démonstration.</p>
+    <form method="post" action="{{ url_for('login') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="niu">Numéro NIU</label>
+      <input id="niu" name="niu" placeholder="Ex. NIU-DEMO-001" autocomplete="username" required>
+      <button class="button button-primary button-wide" type="submit">Continuer <span>→</span></button>
+    </form>
+    <div class="demo-box">
+      <span class="demo-icon">✦</span>
+      <div><strong>Compte de démonstration</strong><br><span>NIU : <code>NIU-DEMO-001</code></span><br><small>Ne saisissez pas de véritable identifiant.</small></div>
+    </div>
+    <p class="security-note"><span>⌑</span> Connexion fictive. Aucune donnée personnelle réelle n'est utilisée.</p>
+  </section>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Paiement démo · Énergie Congo{% endblock %}
+{% block content %}
+<section class="card narrow-card payment-card">
+  <a class="back-link" href="{{ url_for('dashboard') }}">← Retour à mon espace</a>
+  <div class="card-kicker">FACTURE {{ invoice["invoice_number"] }}</div>
+  <h1>Choisissez votre mode de paiement</h1>
+  <p class="muted">Cette étape crée uniquement une transaction de démonstration. Aucun service de paiement n'est connecté.</p>
+
+  <div class="payment-total">
+    <span>Montant de la facture</span>
+    <strong>{{ "{:,.0f}".format(invoice["amount_cfa"]).replace(",", " ") }} <small>FCFA</small></strong>
+    <div>{{ invoice["billing_period"] }} · {{ invoice["consumption_kwh"] }} kWh</div>
+  </div>
+
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="idempotency_key" value="{{ idempotency_key }}">
+    <fieldset class="method-list">
+      <legend>Mode de paiement</legend>
+      {% for method in methods %}
+        <label class="method-option">
+          <input type="radio" name="method" value="{{ method }}" required>
+          <span class="method-symbol">{{ "M" if method == "Mobile Money" else "A" if method == "Airtel Money" else "▣" }}</span>
+          <span>{{ method }}</span><span class="radio-mark"></span>
+        </label>
+      {% endfor %}
+    </fieldset>
+    <div class="notice notice-info"><strong>Mode démonstration</strong><br>Aucun numéro de téléphone, code PIN, OTP ou numéro de carte n'est demandé. Aucune transaction réelle ne sera effectuée.</div>
+    <button class="button button-primary button-wide" type="submit">Continuer la simulation <span>→</span></button>
+  </form>
+</section>
+{% endblock %}

@@ -65,6 +65,7 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+energie_congo*.db
 
 # Scrapy stuff:
 .scrapy

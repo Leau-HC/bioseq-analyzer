@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Vérification · Énergie Congo{% endblock %}
+{% block content %}
+<section class="card narrow-card auth-card">
+  <a class="back-link" href="{{ url_for('login') }}">← Retour</a>
+  <div class="card-kicker">ÉTAPE 2 SUR 2</div>
+  <h1>Vérifiez votre connexion</h1>
+  <p class="muted">Dans une application réelle, un code temporaire serait envoyé sur le téléphone déjà enregistré auprès du fournisseur.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label for="otp">Code de démonstration</label>
+    <input id="otp" name="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" required>
+    <button class="button button-primary button-wide" type="submit">Vérifier le code <span>→</span></button>
+  </form>
+  <div class="demo-box"><span class="demo-icon">✦</span><div><strong>Code fictif</strong><br><code>246810</code><br><small>Ce code fixe est réservé au prototype local.</small></div></div>
+</section>
+{% endblock %}

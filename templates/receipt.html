@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Suivi de transaction · Énergie Congo{% endblock %}
+{% block content %}
+<section class="card narrow-card receipt-card">
+  <div class="receipt-check">{{ "✓" if payment["status"] == "SIMULÉE — NON RÉELLE" else "…" }}</div>
+  <div class="card-kicker">SUIVI DE TRANSACTION</div>
+  <h1>{{ "Simulation terminée" if payment["status"] == "SIMULÉE — NON RÉELLE" else "Demande enregistrée" }}</h1>
+  <p class="muted">Référence de démonstration : <strong>{{ payment["reference"] }}</strong></p>
+  <div class="payment-total receipt-total">
+    <span>Montant de la simulation</span>
+    <strong>{{ "{:,.0f}".format(payment["amount_cfa"]).replace(",", " ") }} <small>FCFA</small></strong>
+  </div>
+  <div class="receipt-details">
+    <div><span>Facture</span><strong>{{ payment["invoice_number"] }}</strong></div>
+    <div><span>Moyen choisi</span><strong>{{ payment["method"] }}</strong></div>
+    <div><span>Statut</span><strong>{{ payment["status"] }}</strong></div>
+    <div><span>Date</span><strong>{{ payment["created_at"][:16].replace("T", " ") }} UTC</strong></div>
+  </div>
+  <div class="notice notice-warning"><strong>Ce n'est pas un reçu de paiement.</strong><br>Cette simulation n'a débité aucun compte et n'a pas réglé la facture auprès d'un fournisseur d'électricité.</div>
+  {% if payment["status"] == "INITIÉE (DÉMO)" %}
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="action" value="confirm_demo">
+      <button class="button button-primary button-wide" type="submit">Terminer la démonstration</button>
+    </form>
+  {% endif %}
+  <a class="button button-light button-wide" href="{{ url_for('dashboard') }}">Retour à mon espace</a>
+</section>
+{% endblock %}
